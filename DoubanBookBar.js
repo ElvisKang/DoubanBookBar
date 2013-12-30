@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name        DoubanBookBar
-// @namespace   ElvisKang
-// @author		ElvisKang<kkx1993@gmail.com>
-// @description 为各大购书网站的界面添加豆瓣评分与链接
+// @namespace   DoubanBookBar
+// @author	Ticshot<Ticshot@gmail.com>
+// @commiter    ElvisKang<kkx1993@gmail.com>
+// @description (在亚马逊、京东、China-pub、苏宁易购)显示书籍的豆瓣评分和其他网站书本价格
 // @include     *://www.amazon.cn/*
-// @include		*://www.amazon.com/*、
-// @include		*://item.jd.com/*
-// @include		*://product.dangdang.com/*
-// @include		*://product.china-pub.com/*
-// @include		*://product.suning.com/*
+// @include	*://www.amazon.com/*、
+// @include	*://item.jd.com/*
+// @include	*://product.dangdang.com/*
+// @include	*://product.china-pub.com/*
+// @include	*://product.suning.com/*
 // @version     ver 0.1
 // @grant GM_xmlhttpRequest
 // ==/UserScript==
@@ -27,8 +28,7 @@
 				checker : (RegExp Object) the regular expression to check whether the current site is belong to this site
 				isComparable: (bool) whether this site joined into the price comparison 
 				getISBN : (function) the function to get ISBN from current site
-				setScore : (function) the function to set the score partten on the current page
-				setPrice : (function) the function to set the price partten on the current page
+				createDoubanBar : (function) the function to create bar
 			*if isComparable is false , then the variables : cName,logo is optional
 		*/
 
