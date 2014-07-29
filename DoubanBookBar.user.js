@@ -3,18 +3,19 @@
 // @namespace   DoubanBookBar
 // @author	Ticshot<Ticshot@gmail.com>
 // @commiter    ElvisKang<kkx1993@gmail.com>
-// @description (在亚马逊、京东、China-pub、苏宁易购)显示书籍的豆瓣评分和其他网站书本价格
+// @description 显示书籍的豆瓣评分并进行比价
+// @downloadURL https://greasyfork.org/scripts/3737-doubanbookbar/code/DoubanBookBar.user.js
+// @updateURL https://greasyfork.org/scripts/3737-doubanbookbar/code/DoubanBookBar.user.js
 // @include     *://www.amazon.cn/*
 // @include	*://www.amazon.com/*、
 // @include	*://item.jd.com/*
 // @include	*://product.dangdang.com/*
 // @include	*://product.china-pub.com/*
 // @include	*://product.suning.com/*
-// @version     ver 0.1
+// @version     ver 0.2
 // @grant GM_xmlhttpRequest
 // ==/UserScript==
 
-//v0.1		第一版发布
 
 
 (function() {
@@ -369,7 +370,7 @@
 			}
 		},
 		createBar: function(book_info, price_infos) {
-			var targetLi = document.querySelector("div.m_t6:nth-child(1)");
+			var targetLi = document.querySelector(".book_messbox");
 			createDoubanBar(book_info, price_infos, this.name, targetLi);
 		}
 
