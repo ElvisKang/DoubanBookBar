@@ -335,13 +335,14 @@
 
 		getISBN: function() {
 			try {
-				return document.getElementById("summary-isbn").getElementsByClassName("dd")[0].innerHTML;
+				var isbnString = document.querySelector("li.fore4:nth-child(2)").innerHTML;
+                return isbnString.split("：")[1];
 			} catch (e) {
 				return null;
 			}
 		},
 		createBar: function(book_info, price_infos) {
-			var targetLi = document.getElementById("summary-stock");
+			var targetLi = document.querySelector("#summary-promotion");
 			createDoubanBar(book_info, price_infos, this.name, targetLi);
 		}
 
@@ -368,7 +369,7 @@
 			}
 		},
 		createBar: function(book_info, price_infos) {
-			var targetLi = document.getElementById("stock_html");
+			var targetLi = document.querySelector("div.m_t6:nth-child(1)");
 			createDoubanBar(book_info, price_infos, this.name, targetLi);
 		}
 
@@ -417,19 +418,14 @@
 
 		getISBN: function() {
 			try {
-				var list = document.getElementById("total").getElementsByTagName("dl");
-				var isbn = /i\s?s\s?b\s?n/i;
-				for (var i = list.length - 1; i >= 0; i--)
-					for (var j = 0, len = list[i].getElementsByTagName("dt").length; j < len; j++)
-						if (isbn.test(list[i].getElementsByTagName("dt")[j].textContent))
-							return list[i].getElementsByTagName("dd")[j].textContent;
-				return null;
+				var isbn = document.querySelector("li.li-b:nth-child(11) > span:nth-child(2)");
+                return isbn.innerHTML;
 			} catch (e) {
 				return null;
 			}
 		},
 		createBar: function(book_info, price_infos) {
-			var targetLi = document.getElementsByClassName("fix cl")[0];
+			var targetLi = document.querySelector("ul.product-info-type:nth-child(3)");
 			createDoubanBar(book_info, price_infos, this.name, targetLi);
 		}
 	};
