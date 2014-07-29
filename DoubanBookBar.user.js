@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        DoubanBookBar
+// @name        Douban Book Bar
 // @namespace   DoubanBookBar
 // @author	Ticshot<Ticshot@gmail.com>
 // @commiter    ElvisKang<kkx1993@gmail.com>
