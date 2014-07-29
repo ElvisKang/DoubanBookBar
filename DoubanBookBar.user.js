@@ -4,15 +4,15 @@
 // @author	Ticshot<Ticshot@gmail.com>
 // @commiter    ElvisKang<kkx1993@gmail.com>
 // @description 显示书籍的豆瓣评分并进行比价
-// @downloadURL https://greasyfork.org/scripts/3737-doubanbookbar/code/DoubanBookBar.user.js
-// @updateURL https://greasyfork.org/scripts/3737-doubanbookbar/code/DoubanBookBar.user.js
+// @downloadURL https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.user.js
+// @updateURL   https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.meta.js
 // @include     *://www.amazon.cn/*
 // @include	*://www.amazon.com/*、
 // @include	*://item.jd.com/*
 // @include	*://product.dangdang.com/*
 // @include	*://product.china-pub.com/*
 // @include	*://product.suning.com/*
-// @version     ver 0.2
+// @version     ver 0.2.1
 // @grant GM_xmlhttpRequest
 // ==/UserScript==
 
