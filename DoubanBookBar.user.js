@@ -195,7 +195,7 @@
 		}
 		//console.log(prices);
 		if (price_infos.length === 0) {
-			prices.innerHTML = "Sorry,豆瓣上找不到这本书相关的购买信息...";
+			prices.innerHTML = "豆瓣上找不到这本书相关的购买信息";
 		}
 
 		return prices;
@@ -321,7 +321,7 @@
 		}
 	};
 
-	var Jd = {
+	var JD = {
 
 		name: "jd",
 
@@ -361,13 +361,8 @@
 
 		getISBN: function() {
 			try {
-				var intros = document.getElementsByClassName("show_info")[0].getElementsByClassName("intro")[0].getElementsByTagName("li");
-				var isbn = intros[intros.length - 1].getElementsByTagName("i")[0];
-				if (isbn.innerHTML === "I S B N：") {
-					//console.log(isbn.nextSibling.data);
-					return isbn.nextSibling.data;
-				}
-				return null;
+				var isbn = document.querySelector("div.m_t6:nth-child(4) > div:nth-child(2)");
+				return isbn.innerHTML;
 			} catch (e) {
 				return null;
 			}
@@ -492,7 +487,7 @@
 	};
 
 	var init = function() {
-		Site.addSite([Amazon, Jd, Dangdang, Chinapub, Suning]);
+		Site.addSite([Amazon, JD, Dangdang, Chinapub, Suning]);
 		var curSite = Site.getCurSite(location.href),
 			isbn = curSite.getISBN();
 		//console.log(curSite.name);
