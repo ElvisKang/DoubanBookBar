@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        DoubanBookBar
+// @name        Douban Book Bar
 // @namespace   DoubanBookBar
 // @license		MIT License
 // @author      ElvisKang<kkx1993@gmail.com>
