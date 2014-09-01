@@ -11,7 +11,7 @@
 // @include     *://product.dangdang.com/*
 // @include     *://product.china-pub.com/*
 // @include     *://product.suning.com/*
-// @version     ver 1.0.13
+// @version     ver 1.0.14
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -298,6 +298,10 @@
         },
         referencePosition : ".product"
     } );
+    // 鉴于亚马逊最近常改动,故设置检验referencePosition的代码
+    if(!(document.querySelector(Amazon.referencePosition))){
+        Amazon.referencePosition = "#tmmSwatches";
+    }
     var JD = new SupportSite ( {
         name : "京东商城",
 
