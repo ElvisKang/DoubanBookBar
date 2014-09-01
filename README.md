@@ -5,5 +5,5 @@
 - 显示其他电商中商品的价格
 
 ###感谢:
-- 插件原作者: Ticshot([电子邮箱](Ticshot@gmail.com))
+- 插件原作者: Ticshot([电子邮箱](mailto:Ticshot@gmail.com))
 
