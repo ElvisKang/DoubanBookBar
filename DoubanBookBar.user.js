@@ -11,7 +11,8 @@
 // @include     *://product.dangdang.com/*
 // @include     *://product.china-pub.com/*
 // @include     *://product.suning.com/*
-// @version     ver 1.0.14
+// @include     *://www.duokan.com/book/*
+// @version     ver 1.1.2
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -382,10 +383,28 @@
         },
         referencePosition : ".product-main-title"
     } );
+    var DuoKan = new SupportSite ( {
+
+        name : "多看阅读",
+
+        checker : /(https?:\/\/)?(www)\.duokan\.com\/.*/,
+
+        logo : "http://www.duokan.com/favicon.ico",
+
+        getISBN           : function () {
+            try {
+                var isbn = document.querySelector ( "span.isbn" );
+                return isbn.innerHTML;
+            } catch (e) {
+                return null;
+            }
+        },
+        referencePosition : "div[itemprop=aggregateRating]"
+    } );
 
     //脚本执行
     function init () {
-        sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning] );
+        sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning,DuoKan] );
         sitesContainer.curSite = location.href;
         if ( !!(sitesContainer.curSite) ) {
             var isbn = sitesContainer.curSite.getISBN ();
