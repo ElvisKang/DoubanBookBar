@@ -3,7 +3,7 @@
 // @namespace   DoubanBookBar
 // @license		MIT License
 // @author      ElvisKang<kkx1993@gmail.com>
-// @description 显示书籍的豆瓣评分并进行比价(暂时仅支持Firefox)
+// @description 显示书籍的豆瓣评分并进行比价(Firefox and Chrome)
 // @downloadURL https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.user.js
 // @updateURL   https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.meta.js
 // @include     *://www.amazon.cn/*
@@ -69,7 +69,7 @@
                 starLi = document.createElement ( "li" ),
                 starSpan = createStarSpan ( averageScore );
             avgLi.innerHTML = '<span>' + averageScore + '</span>';
-            avgLi.id="avgScore";
+            avgLi.id = "avgScore";
             starLi.appendChild ( starSpan );
             infoUl.appendChild ( avgLi );
             bookInfoLink.innerHTML = '<a href="http://book.douban.com/subject/' + bookID + '/" target="_blank" >(去豆瓣看这本书)</a>';
@@ -119,15 +119,12 @@
         return contrastPriceInfo;
     }
 
-
-
     function createBar (infoRow, priceRow, position) {
         var bar = document.createElement ( "div" );
         bar.id = "bookbar-container";
         bar.appendChild ( infoRow );
         bar.appendChild ( priceRow );
         (function insertAfter () {
-//            console.log(bar);
             var parent = position.parentNode;
             if ( parent.lastChild === position ) {
                 parent.appendChild ( bar );
@@ -135,7 +132,7 @@
             else {
                 parent.insertBefore ( bar, position.nextSibling );
             }
-        })();
+        }) ();
 
     }
 
@@ -158,12 +155,12 @@
         container.appendChild ( label );
         return container;
     }
+
 // 获取书籍信息的函数
     function getBookInfo (isbn) {
         if ( !isbn ) {
             return null;
         }
-
         GM_xmlhttpRequest ( {
             method : "get",
             url    : "http://api.douban.com/v2/book/isbn/" + isbn,
@@ -183,15 +180,12 @@
             method : "get",
             url    : doubanLink,
             onload : function (result) {
-//                console.log ( result.responseText );
                 var container = document.createElement ( "div" );
                 container.innerHTML = result.responseText;
                 var list = document.evaluate ( '//table[@id="buylink-table"]/tbody/tr', container, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null );
-                //console.log(list);
                 var priceChecker = /[0-9]+(\.[0-9]+)?/;
 
                 for ( var i = 1, len = list.snapshotLength ; i < len ; i++ ) {
-                    //console.log(list.snapshotItem(i));
                     var part = list.snapshotItem ( i );
                     var link_info = part.querySelectorAll ( "td.pl2" );
                     var siteName = link_info[0].textContent.trim ();
@@ -204,7 +198,6 @@
                         priceList.push ( priceInfo );
                     }
                 }
-                //console.log(priceList);
                 sitesContainer.curSite.createDoubanBar ( bookInfo, priceList );
             }
 
@@ -297,12 +290,9 @@
                 return null;
             }
         },
-        referencePosition : ".product"
+        referencePosition : "#tmmSwatches"
     } );
-    // 鉴于亚马逊最近常改动,故设置检验referencePosition的代码
-    if(!(document.querySelector(Amazon.referencePosition))){
-        Amazon.referencePosition = "#tmmSwatches";
-    }
+
     var JD = new SupportSite ( {
         name : "京东商城",
 
@@ -402,9 +392,8 @@
         referencePosition : "div[itemprop=aggregateRating]"
     } );
 
-    //脚本执行
     function init () {
-        sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning,DuoKan] );
+        sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning, DuoKan] );
         sitesContainer.curSite = location.href;
         if ( !!(sitesContainer.curSite) ) {
             var isbn = sitesContainer.curSite.getISBN ();
@@ -415,5 +404,6 @@
             }
         }
     }
+
     init ();
 }) ();
