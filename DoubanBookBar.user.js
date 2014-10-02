@@ -12,7 +12,7 @@
 // @include     *://product.china-pub.com/*
 // @include     *://product.suning.com/*
 // @include     *://www.duokan.com/book/*
-// @version     ver 1.1.2
+// @version     ver 1.1.3
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
