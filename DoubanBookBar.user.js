@@ -12,17 +12,18 @@
 // @include     *://product.china-pub.com/*
 // @include     *://product.suning.com/*
 // @include     *://www.duokan.com/book/*
-// @version     ver 1.1.3
+// @version     ver 1.1.4
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
 
 (function () {
     "use strict";
+    //设置比价栏的CSS属性
     function setBaseCss () {
         var baseCSS = [
             "#bookbar-container a {color:#228A31 !important;text-decoration:none;font-size: 13px;}",
-            "#bookbar-container .bookbar-title {font-size: 15px;}",
+            "#bookbar-container .bookbar-title {font-size: 14px;width:70px;}",
             "#bookbar-container span {margin-right: 5px;display: inline-block;font-size: 13px;font-weight: bold;}",
             "#bookbar-container ul {padding-left: 0;margin: 4px 0;}",
             "#bookbar-container li {list-style: none none outside; display: inline;padding: 0 4px;}",
@@ -31,7 +32,8 @@
         ].join ( "" );
         GM_addStyle ( baseCSS );
     }
-
+    // create* ----生成比价栏相关的函数
+    //星级信息
     function createStarSpan (score) {
         var starSpan = document.createElement ( "span" );
         starSpan.id = "bookbar-star";
@@ -44,7 +46,7 @@
         GM_addStyle ( starSpanCSS );
         return starSpan;
     }
-
+    //得分与评价信息
     function createScoreSpan (bookInfo) {
         var bookID = bookInfo.id,
             bookRating = bookInfo.rating || {},
@@ -83,7 +85,8 @@
         //console.log(scoreLi);
         return scoreSpan;
     }
-
+    //由 createContrastPriceInfo 函数调用
+    //生成每一个价格<li>标签
     function createPriceLi (iconLink, priceData) {
         var priceLi = document.createElement ( "li" ),
             link = document.createElement ( "a" ),
@@ -100,9 +103,8 @@
         priceLi.appendChild ( link );
         return priceLi;
     }
-
+    //价格(其他网站)信息
     function createContrastPriceInfo (priceList) {
-        //生成其他网站的价格信息
         var contrastPriceInfo = document.createElement ( "span" ),
             infoContainer = document.createElement ( "ul" );
         if ( priceList.length === 0 ) {
@@ -119,20 +121,12 @@
         return contrastPriceInfo;
     }
 
-    function createBar (infoRow, priceRow, position) {
+    function createBar (infoRow, priceRow) {
         var bar = document.createElement ( "div" );
         bar.id = "bookbar-container";
         bar.appendChild ( infoRow );
         bar.appendChild ( priceRow );
-        (function insertAfter () {
-            var parent = position.parentNode;
-            if ( parent.lastChild === position ) {
-                parent.appendChild ( bar );
-            }
-            else {
-                parent.insertBefore ( bar, position.nextSibling );
-            }
-        }) ();
+        return bar;
 
     }
 
@@ -140,7 +134,7 @@
         var container = document.createElement ( "div" ),
             label = document.createElement ( "span" );
         container.id = "bookbar-priceInfo";
-        label.innerHTML = "比&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;价：";
+        label.innerHTML = "比价:";
         label.className = "bookbar-title";
         container.appendChild ( label );
         return container;
@@ -155,8 +149,16 @@
         container.appendChild ( label );
         return container;
     }
-
-// 获取书籍信息的函数
+    function insertBar (bar,position) {
+        var parent = position.parentNode;
+        if ( parent.lastChild === position ) {
+            parent.appendChild ( bar );
+        }
+        else {
+            parent.insertBefore ( bar, position.nextSibling );
+        }
+    }
+    // 获取书籍信息
     function getBookInfo (isbn) {
         if ( !isbn ) {
             return null;
@@ -265,8 +267,10 @@
         priceRowContainer.appendChild ( contrastPriceInfo );
         infoRowContainer.appendChild ( scoreSpan );
         setBaseCss ();
-        createBar ( infoRowContainer, priceRowContainer, referencePosition );
+        var bar = createBar ( infoRowContainer, priceRowContainer);
+        insertBar(bar,referencePosition);
     };
+
     var Amazon = new SupportSite ( {
 
         name : "亚马逊",
@@ -373,6 +377,7 @@
         },
         referencePosition : ".product-main-title"
     } );
+
     var DuoKan = new SupportSite ( {
 
         name : "多看阅读",
