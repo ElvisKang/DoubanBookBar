@@ -2,8 +2,8 @@
 // @name        Douban Book Bar
 // @namespace   DoubanBookBar
 // @license		MIT License
-// @author      ElvisKang<kkx1993@gmail.com>
-// @description 显示书籍的豆瓣评分并进行比价(Firefox and Chrome)
+// @author      ElvisKang<elviskang@foxmail.com>
+// @description 以最优惠的价格买到最心仪的书
 // @downloadURL https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.user.js
 // @updateURL   https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.meta.js
 // @include     *://www.amazon.cn/*
@@ -11,8 +11,9 @@
 // @include     *://product.dangdang.com/*
 // @include     *://product.china-pub.com/*
 // @include     *://product.suning.com/*
+// @include     *://www.suning.com/emall/*
 // @include     *://www.duokan.com/book/*
-// @version     ver 1.1.4
+// @version     ver 1.2.1
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -32,7 +33,9 @@
         ].join ( "" );
         GM_addStyle ( baseCSS );
     }
+
     // create* ----生成比价栏相关的函数
+    //创建比价栏的调用控制函数在SupportSite对象的原型链中
     //星级信息
     function createStarSpan (score) {
         var starSpan = document.createElement ( "span" );
@@ -40,12 +43,13 @@
         var bgPosition = "0 " + (-14) * (10 - Math.floor ( parseFloat ( score ) + 0.8 )) + "px";
         var starSpanCSS = [
             "#bookbar-star { ",
-                "background :url(http://img3.douban.com/pics/movie/bigstars.gif) no-repeat scroll " + bgPosition + " ; ",
+            "background :url(http://img3.douban.com/pics/movie/bigstars.gif) no-repeat scroll " + bgPosition + " ; ",
             "width:75px; height: 14px; position: relative; top: 1px;}"
         ].join ( "" );
         GM_addStyle ( starSpanCSS );
         return starSpan;
     }
+
     //得分与评价信息
     function createScoreSpan (bookInfo) {
         var bookID = bookInfo.id,
@@ -82,9 +86,9 @@
         }
         infoUl.appendChild ( bookInfoLink );
         scoreSpan.appendChild ( infoUl );
-        //console.log(scoreLi);
         return scoreSpan;
     }
+
     //由 createContrastPriceInfo 函数调用
     //生成每一个价格<li>标签
     function createPriceLi (iconLink, priceData) {
@@ -103,6 +107,7 @@
         priceLi.appendChild ( link );
         return priceLi;
     }
+
     //价格(其他网站)信息
     function createContrastPriceInfo (priceList) {
         var contrastPriceInfo = document.createElement ( "span" ),
@@ -115,7 +120,6 @@
                 var priceLi = createPriceLi ( sitesContainer.list[matchIndex].logo, priceList[i] );
                 infoContainer.appendChild ( priceLi );
             }
-            //console.log(contrastPriceInfo);
         }
         contrastPriceInfo.appendChild ( infoContainer );
         return contrastPriceInfo;
@@ -149,7 +153,8 @@
         container.appendChild ( label );
         return container;
     }
-    function insertBar (bar,position) {
+
+    function insertBar (bar, position) {
         var parent = position.parentNode;
         if ( parent.lastChild === position ) {
             parent.appendChild ( bar );
@@ -158,6 +163,7 @@
             parent.insertBefore ( bar, position.nextSibling );
         }
     }
+
     // 获取书籍信息
     function getBookInfo (isbn) {
         if ( !isbn ) {
@@ -167,7 +173,6 @@
             method : "get",
             url    : "http://api.douban.com/v2/book/isbn/" + isbn,
             onload : function (result) {
-                //console.log(result);
                 var bookInfo = JSON.parse ( result.responseText );
                 getBookPrice ( bookInfo );
             }
@@ -209,12 +214,13 @@
 
     // 网站对象
     var sitesContainer = {
-        _siteList     : [],    //可支持的网页,通过Site.list获取
+        //以下划线开头的属性为访问器属性
+        _siteList     : null,    //访问可支持的网页,通过Site.list获取
         _curSite      : null,  //当前网页
         _siteNameList : [],
         addSites      : function (sitesArray) {
-            if ( Object.prototype.toString.call ( sitesArray ) === '[object Array]' ) {
-                this._siteList = this._siteList.concat ( sitesArray );
+            if ( sitesArray instanceof Array) {
+                this._siteList = sitesArray;
                 for ( var i = 0 ; i < sitesArray.length ; i++ ) {
                     this._siteNameList.push ( sitesArray[i].name );
                 }
@@ -233,7 +239,7 @@
             try {
                 //通过对象中的checker属性匹配网站
                 for ( var i = 0, len = this._siteList.length ; i < len ; i++ ) {
-                    if ( Object.prototype.toString.call ( this._siteList[i].checker ) === "[object RegExp]" ) {
+                    if ( (this._siteList[i].checker) instanceof RegExp ) {
                         if ( this._siteList[i].checker.test ( href ) ) {
                             this._curSite = this._siteList[i];
                             return this._siteList[i];
@@ -243,10 +249,9 @@
                 }
 
             } catch (e) {
-                console.log ( "getCurSite() Error : " + e );
-                return {};
+                return null;
             }
-            return {};
+            return null;
         }
     };
 
@@ -260,6 +265,9 @@
 
     SupportSite.prototype.createDoubanBar = function (bookInfo, priceList) {
         var referencePosition = document.querySelector ( this.referencePosition );
+        if ( !referencePosition ) {
+            log ( "Error: 插入位置没有找到" );
+        }
         var infoRowContainer = createInfoRowContainer (),
             priceRowContainer = createPriceRowContainer ();
         var scoreSpan = createScoreSpan ( bookInfo ),
@@ -267,8 +275,8 @@
         priceRowContainer.appendChild ( contrastPriceInfo );
         infoRowContainer.appendChild ( scoreSpan );
         setBaseCss ();
-        var bar = createBar ( infoRowContainer, priceRowContainer);
-        insertBar(bar,referencePosition);
+        var bar = createBar ( infoRowContainer, priceRowContainer );
+        insertBar ( bar, referencePosition );
     };
 
     var Amazon = new SupportSite ( {
@@ -369,13 +377,32 @@
 
         getISBN           : function () {
             try {
+                var isbn = document.querySelector ( "#bookParameterField > dl:nth-child(4) > dd:nth-child(2)" );
+                return isbn.innerHTML;
+            } catch (e) {
+                return null;
+            }
+        },
+        referencePosition : "#existPrice"
+    } );
+    //苏宁第三方(文轩等)
+    var SuningThird = new SupportSite ( {
+
+        name : "苏宁易购第三方",
+
+        checker : /(https?:\/\/)?(www)?\.suning\.com\/emall\/.*/,
+
+        logo : "http://www.suning.com/favicon.ico",
+
+        getISBN           : function () {
+            try {
                 var isbn = document.querySelector ( "li.li-b:nth-child(11) > span:nth-child(2)" );
                 return isbn.innerHTML;
             } catch (e) {
                 return null;
             }
         },
-        referencePosition : ".product-main-title"
+        referencePosition : "#productInfoUl"
     } );
 
     var DuoKan = new SupportSite ( {
@@ -397,16 +424,24 @@
         referencePosition : "div[itemprop=aggregateRating]"
     } );
 
+    function log (msg) {
+        console.log ( "DoubanBookBar: " + msg );
+    }
+
     function init () {
-        sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning, DuoKan] );
+        sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning,SuningThird, DuoKan] );
         sitesContainer.curSite = location.href;
-        if ( !!(sitesContainer.curSite) ) {
-            var isbn = sitesContainer.curSite.getISBN ();
-            try {
-                getBookInfo ( isbn );
-            } catch (e) {
-                throw  e;
-            }
+        if ( !sitesContainer.curSite ) {
+            log ( "Error: 无法正确匹配当前的网站" );
+        }
+        var isbn = sitesContainer.curSite.getISBN ();
+        if ( !isbn ) {
+            log ( "Error: 无法获取ISBN" ); //判定isbn是否获取成功
+        }
+        try {
+            getBookInfo ( isbn );
+        } catch (e) {
+            throw  e;
         }
     }
 
