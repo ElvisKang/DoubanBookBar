@@ -13,11 +13,10 @@
 // @include     *://product.suning.com/*
 // @include     *://www.suning.com/emall/*
 // @include     *://www.duokan.com/book/*
-// @version     ver 1.2.1
+// @version     ver 1.2.5
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
-
 (function () {
     "use strict";
     //设置比价栏的CSS属性

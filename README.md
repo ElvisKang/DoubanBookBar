@@ -8,6 +8,8 @@
 - 插件原作者: Ticshot([电子邮箱](mailto:Ticshot@gmail.com))
 
 ##更新日志:
+=Version 1.2.5=
+>-Add 显示差价值
 
 =Version: 1.2.1=  
 >-Add 添加苏宁第三方商铺的显示  
