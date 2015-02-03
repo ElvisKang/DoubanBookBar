@@ -91,7 +91,7 @@
 
     //由 createContrastPriceInfo 函数调用
     //生成每一个价格<li>标签
-    function createPriceLi (iconLink, priceData) {
+    function createPriceLi (iconLink, priceData, sitePrice) {
         var priceLi = document.createElement ( "li" ),
             link = document.createElement ( "a" ),
             img = document.createElement ( "img" );
@@ -102,6 +102,11 @@
             link.textContent = "[没找到]";
         } else {
             link.textContent = "￥" + priceData.price;
+            if ( sitePrice !== -1 ) {
+                var difference = parseFloat(priceData.price) - parseFloat(sitePrice);
+                var sgn = difference > 0 ? "+" : "";
+                link.textContent += "( " + sgn + difference.toFixed(2) + " )";
+            }
         }
         priceLi.appendChild ( img );
         priceLi.appendChild ( link );
@@ -117,7 +122,7 @@
         } else {
             for ( var i = 0, len = priceList.length ; i < len ; i++ ) {
                 var matchIndex = sitesContainer.nameList.indexOf ( priceList[i].name );
-                var priceLi = createPriceLi ( sitesContainer.list[matchIndex].logo, priceList[i] );
+                var priceLi = createPriceLi ( sitesContainer.list[matchIndex].logo, priceList[i],priceList.curSitePrice );
                 infoContainer.appendChild ( priceLi );
             }
         }
@@ -191,18 +196,23 @@
                 container.innerHTML = result.responseText;
                 var list = document.evaluate ( '//table[@id="buylink-table"]/tbody/tr', container, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null );
                 var priceChecker = /[0-9]+(\.[0-9]+)?/;
-
+                var curSitePrice = -1;
                 for ( var i = 1, len = list.snapshotLength ; i < len ; i++ ) {
                     var part = list.snapshotItem ( i );
                     var link_info = part.querySelectorAll ( "td.pl2" );
                     var siteName = link_info[0].textContent.trim ();
-                    if ( sitesContainer.nameList.indexOf ( siteName ) !== -1 && siteName !== sitesContainer.curSite.name ) {
-                        var priceInfo = {
-                            "name"  : siteName,
-                            "href"  : link_info[0].getElementsByTagName ( "a" )[0].href,
-                            "price" : priceChecker.exec ( link_info[1].textContent.trim () )[0]
-                        };
-                        priceList.push ( priceInfo );
+                    if ( sitesContainer.nameList.indexOf ( siteName ) !== -1 ) {
+                        if ( siteName === sitesContainer.curSite.name ) {
+                            curSitePrice = priceChecker.exec ( link_info[1].textContent.trim () )[0];
+                        } else {
+                            var priceInfo = {
+                                "name"  : siteName,
+                                "href"  : link_info[0].getElementsByTagName ( "a" )[0].href,
+                                "price" : priceChecker.exec ( link_info[1].textContent.trim () )[0]
+                            };
+                            priceList.push ( priceInfo );
+                        }
+                        priceList.curSitePrice = curSitePrice; // 如果为-1，则说明没有获得当前网页的书本价格
                     }
                 }
                 sitesContainer.curSite.createDoubanBar ( bookInfo, priceList );
@@ -219,7 +229,7 @@
         _curSite      : null,  //当前网页
         _siteNameList : [],
         addSites      : function (sitesArray) {
-            if ( sitesArray instanceof Array) {
+            if ( sitesArray instanceof Array ) {
                 this._siteList = sitesArray;
                 for ( var i = 0 ; i < sitesArray.length ; i++ ) {
                     this._siteNameList.push ( sitesArray[i].name );
@@ -263,6 +273,7 @@
         this.referencePosition = siteInfo.referencePosition;
     }
 
+    SupportSite.prototype.isEBook = false;
     SupportSite.prototype.createDoubanBar = function (bookInfo, priceList) {
         var referencePosition = document.querySelector ( this.referencePosition );
         if ( !referencePosition ) {
@@ -409,6 +420,8 @@
 
         name : "多看阅读",
 
+        isEBook : true,
+
         checker : /(https?:\/\/)?(www)\.duokan\.com\/.*/,
 
         logo : "http://www.duokan.com/favicon.ico",
@@ -429,7 +442,7 @@
     }
 
     function init () {
-        sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning,SuningThird, DuoKan] );
+        sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning, SuningThird, DuoKan] );
         sitesContainer.curSite = location.href;
         if ( !sitesContainer.curSite ) {
             log ( "Error: 无法正确匹配当前的网站" );
