@@ -302,7 +302,7 @@
             try {
                 for ( var i = 0 ; i <= contents.length ; i++ ) {
                     var info = contents[i];
-                    if ( info.textContent === "ISBN:" || info.textContent === "条形码:" ) {
+                    if ( (!!info) && info.textContent === "ISBN:") {
                         //console.log(info.nextSibling.data.split(",")[0].substring(1));
                         return info.nextSibling.data.split ( "," )[0].substring ( 1 );
                     }
@@ -451,6 +451,7 @@
             log ( "Error: 无法获取ISBN" ); //判定isbn是否获取成功
         }
         try {
+            log("Success: 已获得ISBN,若有其他有关ISBN信息,则是插件在网页重复运行");
             getBookInfo ( isbn );
         } catch (e) {
             throw  e;

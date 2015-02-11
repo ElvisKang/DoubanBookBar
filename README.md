@@ -8,10 +8,14 @@
 - 插件原作者: Ticshot([电子邮箱](mailto:Ticshot@gmail.com))
 
 ##更新日志:
+=Version 1.2.6=
+>-Fix 小bug
+
 =Version 1.2.5=
 >-Add 显示差价值
 >-备注 如果网站内没有显示差价，说明豆瓣上没有记录该网站相关信息
-=Version: 1.2.1=  
+
+=Version: 1.2.1=
 >-Add 添加苏宁第三方商铺的显示  
 >-Add 增加获取脚本运行错误的功能(输出在Console)  
 >-Fix 修正苏宁易购官方图书显示问题  
