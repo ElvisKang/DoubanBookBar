@@ -6,14 +6,14 @@
 // @description 以最优惠的价格买到最心仪的书
 // @downloadURL https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.user.js
 // @updateURL   https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.meta.js
-// @include     *://www.amazon.cn/*
+// @include     *://www.amazon.cn/gp/product/*
 // @include     *://item.jd.com/*
 // @include     *://product.dangdang.com/*
 // @include     *://product.china-pub.com/*
 // @include     *://product.suning.com/*
 // @include     *://www.suning.com/emall/*
 // @include     *://www.duokan.com/book/*
-// @version     ver 1.2.5
+// @version     ver 1.2.6
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==

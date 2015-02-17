@@ -9,7 +9,7 @@
 
 ##更新日志:
 =Version 1.2.6=
->-Fix 小bug
+>-Fix bugs
 
 =Version 1.2.5=
 >-Add 显示差价值
