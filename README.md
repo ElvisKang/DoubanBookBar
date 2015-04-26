@@ -9,15 +9,16 @@
 
 ##更新日志:
 =Version 1.2.8=
->-Fix 解决在firefox中多次运行的问题
->-Fix 解决京东不能获取ISBN的问题
->-Update 优化代码
+>-Fix 解决在firefox中多次运行的问题  
+>-Fix 解决京东不能获取ISBN的问题  
+>-Update 优化代码  
+
 
 =Version 1.2.6=
 >-Fix bugs
 
 =Version 1.2.5=
->-Add 显示差价值
+>-Add 显示差价值  
 >-Note 如果网站内没有显示差价，说明豆瓣上没有记录该网站相关信息
 
 =Version: 1.2.1=
