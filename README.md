@@ -8,6 +8,10 @@
 - 插件原作者: Ticshot([电子邮箱](mailto:Ticshot@gmail.com))
 
 ##更新日志:
+=Version 1.2.9=
+>-Fix 解决在京东非图书页面运行的问题  
+>-Add 支持文轩网 
+
 =Version 1.2.8=
 >-Fix 解决在firefox中多次运行的问题  
 >-Fix 解决京东不能获取ISBN的问题  
