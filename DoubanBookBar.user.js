@@ -13,7 +13,8 @@
 // @include     *://product.suning.com/*
 // @include     *://www.suning.com/emall/*
 // @include     *://www.duokan.com/book/*
-// @version     ver 1.2.8
+// @include     *://www.winxuan.com/product/*
+// @version     ver 1.2.9
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -34,7 +35,7 @@ if ( window.top === window.self ) {
             _siteNameList : [],
             addSites      : function (sitesArray) {
                 if ( Array.isArray ( sitesArray ) ) {
-                   this._siteList =  this.list.concat ( sitesArray );
+                    this._siteList = this.list.concat ( sitesArray );
                     var that = this;
                     sitesArray.forEach ( function (value) {
                         that.nameList.push ( value.name );
@@ -77,7 +78,7 @@ if ( window.top === window.self ) {
             var insertPosition = document.querySelector ( this.insertPosition );
             if ( !insertPosition ) {
                 log ( "-Error: 网页发生变动，插入位置没有找到" );
-                return ;
+                return;
             }
             var infoRowContainer  = createInfoRowContainer (),
                 priceRowContainer = createPriceRowContainer ();
@@ -98,18 +99,13 @@ if ( window.top === window.self ) {
 
             logo : "http://www.amazon.cn/favicon.ico",
 
-            getISBN           : function () {
+            getISBN        : function () {
                 var contents = document.querySelectorAll ( "div.content b" );
-                try {
-                    for ( var i = 0 ; i <= contents.length ; i++ ) {
-                        var info = contents[i];
-                        if ( (!!info) && info.textContent === "ISBN:" ) {
-                            return info.nextSibling.data.split ( "," )[0].substring ( 1 );
-                        }
+                for ( var i = 0 ; i <= contents.length ; i++ ) {
+                    var info = contents[i];
+                    if ( info && info.textContent === "ISBN:" ) {
+                        return info.nextSibling.data.split ( "," )[0].substring ( 1 );
                     }
-                    return null;
-                } catch (e) {
-                    return null;
                 }
             },
             insertPosition : "#tmmSwatches"
@@ -122,13 +118,12 @@ if ( window.top === window.self ) {
 
             logo : "http://www.jd.com/favicon.ico",
 
-            getISBN           : function () {
-                try {
-                    var isbnString = document.querySelector ( "#parameter2 > li:nth-child(2)" ).innerHTML;
-                    return isbnString.split ( "：" )[1];
-                } catch (e) {
-                    return null;
+            getISBN        : function () {
+                var liContent = document.querySelector ( "#parameter2 > li:nth-child(2)" ).innerHTML;
+                if(liContent.match(/^ISBN/) !== null) {
+                    return liContent.split ( "：" )[1];
                 }
+                return null;
             },
             insertPosition : "#summary-price"
         } );
@@ -141,17 +136,12 @@ if ( window.top === window.self ) {
 
             logo : "http://www.dangdang.com/favicon.ico",
 
-            getISBN           : function () {
+            getISBN        : function () {
                 var scanItems = document.querySelectorAll ( "div.show_info_left" );
-                try {
-                    for ( var i = 0 ; i < scanItems.length ; i++ ) {
-                        if ( scanItems[i].textContent === "ＩＳＢＮ" || scanItems[i].textContent === "ISBN" ) {
-                            return scanItems[i].nextElementSibling.innerHTML;
-                        }
+                for ( var i = 0 ; i < scanItems.length ; i++ ) {
+                    if ( scanItems[i].textContent === "ＩＳＢＮ" || scanItems[i].textContent === "ISBN" ) {
+                        return scanItems[i].nextElementSibling.innerHTML;
                     }
-
-                } catch (e) {
-                    return null;
                 }
             },
             insertPosition : ".head"
@@ -165,14 +155,13 @@ if ( window.top === window.self ) {
 
             logo : "http://www.china-pub.com/favicon.ico",
 
-            getISBN           : function () {
+            getISBN        : function () {
                 var list = document.querySelectorAll ( "#con_a_1 li" );
                 for ( var i = 0 ; i < list.length ; i++ ) {
                     if ( list[i].innerHTML.split ( "：" )[0] === "ISBN" ) {
                         return list[i].innerHTML.split ( "：" )[1].replace ( /<.*?>/g, "" ).match ( /[0-9]*/g ).join ( "" );
                     }
                 }
-                return null;
             },
             insertPosition : ".pro_buy_star"
         } );
@@ -185,13 +174,9 @@ if ( window.top === window.self ) {
 
             logo : "http://www.suning.com/favicon.ico",
 
-            getISBN           : function () {
-                try {
-                    var isbn = document.querySelector ( "#bookParameterField > dl:nth-child(4) > dd:nth-child(2)" );
-                    return isbn.innerHTML;
-                } catch (e) {
-                    return null;
-                }
+            getISBN        : function () {
+                var isbn = document.querySelector ( "#bookParameterField > dl:nth-child(4) > dd:nth-child(2)" );
+                return isbn.innerHTML;
             },
             insertPosition : "#existPrice"
         } );
@@ -204,17 +189,31 @@ if ( window.top === window.self ) {
 
             logo : "http://www.suning.com/favicon.ico",
 
-            getISBN           : function () {
-                try {
-                    var isbn = document.querySelector ( "li.li-b:nth-child(11) > span:nth-child(2)" );
-                    return isbn.innerHTML;
-                } catch (e) {
-                    return null;
-                }
+            getISBN        : function () {
+                var isbn = document.querySelector ( "li.li-b:nth-child(11) > span:nth-child(2)" );
+                return isbn.innerHTML;
             },
             insertPosition : "#productInfoUl"
         } );
 
+        var WinXuan = new SupportSite ( {
+            name           : "文轩网",
+            checker        : /(https?:\/\/)?(www)\.winxuan\.com\/.*/,
+            logo           : "http://www.winxuan.com/favicon.ico",
+            insertPosition : "div.name:nth-child(1)",
+            getISBN        : function () {
+                var contents = document.querySelectorAll ( ".list-text-3>li" );
+                //目前文轩网的ISBN位于列表的最后一项，考虑到以后的位置可能发生改变，所以从后往前遍历列表
+                var i = contents.length ;
+                for ( ; i-- ; ) {
+                    var text = contents[i].textContent;
+                    var textChecker = /^I S B N：/;
+                    if ( text && textChecker.test(text) ) {
+                        return text.split ( "：" )[1];
+                    }
+                }
+            }
+        } );
         var DuoKan = new SupportSite ( {
 
             name : "多看阅读",
@@ -225,13 +224,9 @@ if ( window.top === window.self ) {
 
             logo : "http://www.duokan.com/favicon.ico",
 
-            getISBN           : function () {
-                try {
+            getISBN        : function () {
                     var isbn = document.querySelector ( "span.isbn" );
                     return isbn.innerHTML;
-                } catch (e) {
-                    return null;
-                }
             },
             insertPosition : "div[itemprop=aggregateRating]"
         } );
@@ -449,16 +444,16 @@ if ( window.top === window.self ) {
         }
 
         function run () {
-            sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning, SuningThird, DuoKan] );
+            sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning, SuningThird, DuoKan,WinXuan] );
             sitesContainer.curSite = location.href;
             if ( !sitesContainer.curSite ) {
                 log ( "-Error: 不支持当前的页面" );
-                return ;
+                return;
             }
             var isbn = sitesContainer.curSite.getISBN ();
             if ( !isbn ) {
                 log ( "-Error: 无法获取ISBN" );
-                return ;
+                return;
             } else {
                 log ( "-Success: 成功获取ISBN" );
 
