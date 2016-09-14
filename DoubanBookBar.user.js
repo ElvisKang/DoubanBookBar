@@ -15,7 +15,7 @@
 // @include     *://www.duokan.com/book/*
 // @include     *://www.winxuan.com/product/*
 // @include     *://www.ituring.com.cn/*
-// @version     ver 1.2.10
+// @version     ver 1.2.11
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
