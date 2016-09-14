@@ -14,6 +14,7 @@
 // @include     *://www.suning.com/emall/*
 // @include     *://www.duokan.com/book/*
 // @include     *://www.winxuan.com/product/*
+// @include     *://www.ituring.com.cn/*
 // @version     ver 1.2.10
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
@@ -230,6 +231,27 @@ if ( window.top === window.self ) {
             },
             insertPosition : "div[itemprop=aggregateRating]"
         } );
+
+        var ituring = new SupportSite ( {
+            name : "图灵社区",
+
+            checker : /(http?:\/\/)?(www)?\.ituring\.com\.cn\/book\/.*/,
+
+            logo : "http://www.ituring.com.cn/favicon.ico",
+
+            getISBN        : function () {
+                var tlContent = document.querySelectorAll ( "#info table td" );
+                var patt = new RegExp(/^(\d+-){3,4}(?:\d+|X)$/);
+                for ( var i = 0 ; i < tlContent.length ; i++ ) {
+                    if ( patt.test(tlContent[i].textContent) ) {
+                        return tlContent[i].innerHTML.replace(new RegExp(/(-)/g),'');
+                    }
+                }
+                return null;
+            },
+            insertPosition : "#ckepop"
+        } );
+
         //全局函数声明区
 
         function log (msg) {
@@ -444,7 +466,7 @@ if ( window.top === window.self ) {
         }
 
         function run () {
-            sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning, SuningThird, DuoKan,WinXuan] );
+            sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning, SuningThird, DuoKan, WinXuan, ituring] );
             sitesContainer.curSite = location.href;
             if ( !sitesContainer.curSite ) {
                 log ( "-Error: 不支持当前的页面" );
