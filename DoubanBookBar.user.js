@@ -392,7 +392,7 @@ if ( window.top === window.self ) {
             }
             GM_xmlhttpRequest ( {
                 method  : "get",
-                url     : "http://api.douban.com/v2/book/isbn/" + isbn,
+                url     : "https://api.douban.com/v2/book/isbn/" + isbn,
                 onload  : function (result) {
                     var bookInfo = JSON.parse ( result.responseText );
                     getBookPrice ( bookInfo );
