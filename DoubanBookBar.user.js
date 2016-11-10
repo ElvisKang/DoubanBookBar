@@ -15,7 +15,7 @@
 // @include     *://www.duokan.com/book/*
 // @include     *://www.winxuan.com/product/*
 // @include     *://www.ituring.com.cn/*
-// @version     ver 1.2.12
+// @version     ver 1.2.13
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -138,14 +138,15 @@ if ( window.top === window.self ) {
             logo : "http://www.dangdang.com/favicon.ico",
 
             getISBN        : function () {
-                var scanItems = document.querySelectorAll ( "div.show_info_left" );
+                var scanItems = document.querySelectorAll ( "#detail_describe li" );
                 for ( var i = 0 ; i < scanItems.length ; i++ ) {
-                    if ( scanItems[i].textContent === "ＩＳＢＮ" || scanItems[i].textContent === "ISBN" ) {
-                        return scanItems[i].nextElementSibling.innerHTML;
+                    var splitResult = scanItems[i].innerText.split('ISBN：');
+                    if ( splitResult.length === 2 ) {
+                        return splitResult[1];
                     }
                 }
             },
-            insertPosition : ".head"
+            insertPosition : ".messbox_info"
         } );
 
         var Chinapub = new SupportSite ( {
