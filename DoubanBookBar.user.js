@@ -15,7 +15,7 @@
 // @include     *://www.duokan.com/book/*
 // @include     *://www.winxuan.com/product/*
 // @include     *://www.ituring.com.cn/*
-// @version     ver 1.2.14
+// @version     ver 1.2.15
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -279,11 +279,11 @@ if ( window.top === window.self ) {
         function createStarSpan (score) {
             var starSpan = document.createElement ( "span" );
             starSpan.id = "bookbar-star";
-            var bgPosition = "0 " + (-14) * (10 - Math.floor ( parseFloat ( score ) + 0.8 )) + "px";
+            var bgPosition = "0 " + (-15) * (10 - Math.floor ( parseFloat ( score ) + 0.8 )) + "px";
             var starSpanCSS = [
                 "#bookbar-star { ",
                 "background :url(https://img3.doubanio.com/f/shire/680a4bc4c384199245b080c7104da5be8ed717d3/pics/rating_icons/ic_rating_m.png) no-repeat scroll " + bgPosition + " ; ",
-                "width:75px; height: 14px; position: relative; top: 1px;}"
+                "width:75px; height: 15px; position: relative; top: 1px;}"
             ].join ( "" );
             GM_addStyle ( starSpanCSS );
             return starSpan;
