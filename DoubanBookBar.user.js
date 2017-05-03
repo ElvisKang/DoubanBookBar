@@ -4,6 +4,8 @@
 // @license		MIT License
 // @author      ElvisKang<elviskang@foxmail.com>
 // @description 以最优惠的价格买到最心仪的书
+// @downloadURL https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.user.js
+// @updateURL   https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.meta.js
 // @include     *://www.amazon.cn/*
 // @include     *://item.jd.com/*
 // @include     *://product.dangdang.com/*
