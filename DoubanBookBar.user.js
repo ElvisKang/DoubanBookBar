@@ -4,8 +4,6 @@
 // @license		MIT License
 // @author      ElvisKang<elviskang@foxmail.com>
 // @description 以最优惠的价格买到最心仪的书
-// @downloadURL https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.user.js
-// @updateURL   https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.meta.js
 // @include     *://www.amazon.cn/*
 // @include     *://item.jd.com/*
 // @include     *://product.dangdang.com/*
@@ -15,7 +13,8 @@
 // @include     *://www.duokan.com/book/*
 // @include     *://www.winxuan.com/product/*
 // @include     *://www.ituring.com.cn/*
-// @version     ver 1.2.15
+// @include     *://www.epubit.com.cn/*
+// @version     ver 1.2.16
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -253,6 +252,26 @@ if ( window.top === window.self ) {
             insertPosition : "#ckepop"
         } );
 
+        var epubit = new SupportSite ( {
+            name : "异步社区",
+
+            checker : /(http?:\/\/)?(www)?\.epubit\.com\.cn\/book\/details\/.*/,
+
+            logo : "http://www.epubit.com.cn/favicon.ico",
+
+            getISBN        : function () {
+                var ybContent = document.querySelectorAll ( "#publish-info ul li" );
+                var ybPatt = /(\d+-){3,4}(?:\d+|X)/;
+                for ( var i = 0 ; i < ybContent.length ; i++ ) {
+                    if ( ybPatt.test(ybContent[i].textContent) ) {
+                        return ybContent[i].innerHTML.match(ybPatt)[0].replace(new RegExp(/(-)/g),'');
+                    }
+                }
+                return null;
+            },
+            insertPosition : "div.share"
+        } );
+
         //全局函数声明区
 
         function log (msg) {
@@ -467,7 +486,7 @@ if ( window.top === window.self ) {
         }
 
         function run () {
-            sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning, SuningThird, DuoKan, WinXuan, ituring] );
+            sitesContainer.addSites ( [Amazon, JD, Dangdang, Chinapub, Suning, SuningThird, DuoKan, WinXuan, ituring, epubit] );
             sitesContainer.curSite = location.href;
             if ( !sitesContainer.curSite ) {
                 log ( "-Error: 不支持当前的页面" );
