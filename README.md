@@ -1,4 +1,4 @@
-# DoubanBookBar  usescript作品
+# DoubanBookBar
 
 ## 功能:
 
