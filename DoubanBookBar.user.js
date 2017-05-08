@@ -16,7 +16,7 @@
 // @include     *://www.winxuan.com/product/*
 // @include     *://www.ituring.com.cn/*
 // @include     *://www.epubit.com.cn/*
-// @version     ver 1.2.16
+// @version     ver 1.2.17
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -242,16 +242,16 @@ if ( window.top === window.self ) {
             logo : "http://www.ituring.com.cn/favicon.ico",
 
             getISBN        : function () {
-                var tlContent = document.querySelectorAll ( "#info table td" );
-                var patt = new RegExp(/^(\d+-){3,4}(?:\d+|X)$/);
+                var tlContent = document.querySelectorAll ( ".publish-info li" );
+                var patt = /(\d+-){3,4}(?:\d+|X)/;
                 for ( var i = 0 ; i < tlContent.length ; i++ ) {
                     if ( patt.test(tlContent[i].textContent) ) {
-                        return tlContent[i].innerHTML.replace(new RegExp(/(-)/g),'');
+                        return tlContent[i].innerHTML.match(patt)[0].replace(new RegExp(/(-)/g),'');
                     }
                 }
                 return null;
             },
-            insertPosition : "#ckepop"
+            insertPosition : "div.book-status"
         } );
 
         var epubit = new SupportSite ( {
