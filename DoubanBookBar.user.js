@@ -17,6 +17,7 @@
 // @include     *://www.ituring.com.cn/*
 // @include     *://www.epubit.com.cn/*
 // @include     *://detail.tmall.com/*
+// @include     *://item.taobao.com/*
 // @version     ver 1.2.18
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
@@ -100,7 +101,7 @@ if (window.top === window.self) {
 
             checker: /(https?:\/\/)?(www)?\.amazon\.(com|cn)\/.*/,
 
-            logo: "http://www.amazon.cn/favicon.ico",
+            logo: "https://www.amazon.cn/favicon.ico",
 
             getISBN: function () {
                 var contents = document.querySelectorAll("div.content b");
@@ -120,10 +121,33 @@ if (window.top === window.self) {
 
             checker: /(https?:\/\/)?(detail)?\.tmall\.com\/.*/,
 
-            logo: "http://www.tmall.com/favicon.ico",
+            logo: "https://www.tmall.com/favicon.ico",
 
             getISBN: function () {
                 var items = document.querySelectorAll("#J_AttrUL li");
+                for (var i = 0; i <= items.length; i++) {
+                    var info = items[i];
+                    if (info.innerText) {
+                        var result = info.innerText.match(/ISBN[^0-9]*(\d+)/i)
+                        if (result) {
+                            return result[1]
+                        }
+                    }
+                }
+            },
+            insertPosition: ".tb-meta"
+        });
+
+        var Taobao = new SupportSite({
+
+            name: "淘宝",
+
+            checker: /(https?:\/\/)?(item)?\.taobao\.com\/.*/,
+
+            logo: "https://www.taobao.com/favicon.ico",
+
+            getISBN: function () {
+                var items = document.querySelectorAll(".attributes-list li");
                 for (var i = 0; i <= items.length; i++) {
                     var info = items[i];
                     if (info.innerText) {
@@ -142,7 +166,7 @@ if (window.top === window.self) {
 
             checker: /(https?:\/\/)?(www|item)?\.jd\.com\/.*/,
 
-            logo: "http://www.jd.com/favicon.ico",
+            logo: "https://www.jd.com/favicon.ico",
 
             getISBN: function () {
                 var liContent = document.querySelector("#parameter2 > li:nth-child(2)").innerHTML;
@@ -160,7 +184,7 @@ if (window.top === window.self) {
 
             checker: /(https?:\/\/)?(www|product)?\.dangdang\.com\/.*/,
 
-            logo: "http://www.dangdang.com/favicon.ico",
+            logo: "https://www.dangdang.com/favicon.ico",
 
             getISBN: function () {
                 var scanItems = document.querySelectorAll("#detail_describe li");
@@ -180,7 +204,7 @@ if (window.top === window.self) {
 
             checker: /(https?:\/\/)?(product|www)\.china\-pub\.com\/.*/,
 
-            logo: "http://www.china-pub.com/favicon.ico",
+            logo: "https://www.china-pub.com/favicon.ico",
 
             getISBN: function () {
                 var list = document.querySelectorAll("#con_a_1 li");
@@ -199,7 +223,7 @@ if (window.top === window.self) {
 
             checker: /(https?:\/\/)?(product)\.suning\.com\/.*/,
 
-            logo: "http://www.suning.com/favicon.ico",
+            logo: "https://www.suning.com/favicon.ico",
 
             getISBN: function () {
                 var isbn = document.querySelector("#bookParameterField > dl:nth-child(4) > dd:nth-child(2)");
@@ -214,7 +238,7 @@ if (window.top === window.self) {
 
             checker: /(https?:\/\/)?(www)?\.suning\.com\/emall\/.*/,
 
-            logo: "http://www.suning.com/favicon.ico",
+            logo: "https://www.suning.com/favicon.ico",
 
             getISBN: function () {
                 var isbn = document.querySelector("li.li-b:nth-child(11) > span:nth-child(2)");
@@ -226,7 +250,7 @@ if (window.top === window.self) {
         var WinXuan = new SupportSite({
             name: "文轩网",
             checker: /(https?:\/\/)?(www)\.winxuan\.com\/.*/,
-            logo: "http://www.winxuan.com/favicon.ico",
+            logo: "https://www.winxuan.com/favicon.ico",
             insertPosition: "div.name:nth-child(1)",
             getISBN: function () {
                 var contents = document.querySelectorAll(".list-text-3>li");
@@ -249,7 +273,7 @@ if (window.top === window.self) {
 
             checker: /(https?:\/\/)?(www)\.duokan\.com\/.*/,
 
-            logo: "http://www.duokan.com/favicon.ico",
+            logo: "https://www.duokan.com/favicon.ico",
 
             getISBN: function () {
                 var isbn = document.querySelector("span.isbn");
@@ -263,7 +287,7 @@ if (window.top === window.self) {
 
             checker: /(http?:\/\/)?(www)?\.ituring\.com\.cn\/book\/.*/,
 
-            logo: "http://www.ituring.com.cn/favicon.ico",
+            logo: "https://www.ituring.com.cn/favicon.ico",
 
             getISBN: function () {
                 var tlContent = document.querySelectorAll(".publish-info li");
@@ -283,7 +307,7 @@ if (window.top === window.self) {
 
             checker: /(http?:\/\/)?(www)?\.epubit\.com\.cn\/book\/details\/.*/,
 
-            logo: "http://www.epubit.com.cn/favicon.ico",
+            logo: "https://www.epubit.com.cn/favicon.ico",
 
             getISBN: function () {
                 var ybContent = document.querySelectorAll("#publish-info ul li");
@@ -349,7 +373,7 @@ if (window.top === window.self) {
             } else if (numRaters < 10) {
                 commentsLink.innerHTML = "<span>少于10人评价这本书</span>";
             } else if (numRaters >= 10) {
-                commentsLink.innerHTML = '<a  href="http://book.douban.com/subject/' + bookID + '/collections" target="_blank">(共' + numRaters + '人评价)</a>';
+                commentsLink.innerHTML = '<a  href="https://book.douban.com/subject/' + bookID + '/collections" target="_blank">(共' + numRaters + '人评价)</a>';
             } else {
                 //获取信息出现错误
                 commentsLink.innerHTML = "";
@@ -362,11 +386,11 @@ if (window.top === window.self) {
                 avgLi.id = "avgScore";
                 starLi.appendChild(starSpan);
                 infoUl.appendChild(avgLi);
-                bookInfoLink.innerHTML = '<a href="http://book.douban.com/subject/' + bookID + '/" target="_blank" >(去豆瓣看这本书)</a>';
+                bookInfoLink.innerHTML = '<a href="https://book.douban.com/subject/' + bookID + '/" target="_blank" >(去豆瓣看这本书)</a>';
                 infoUl.appendChild(starLi);
                 infoUl.appendChild(commentsLink);
             } else {
-                bookInfoLink.innerHTML = '<a href="http://book.douban.com" target="_blank">没在豆瓣找到这本书,去豆瓣逛逛?</a>';
+                bookInfoLink.innerHTML = '<a href="https://book.douban.com" target="_blank">没在豆瓣找到这本书,去豆瓣逛逛?</a>';
             }
             infoUl.appendChild(bookInfoLink);
             scoreSpan.appendChild(infoUl);
@@ -473,7 +497,7 @@ if (window.top === window.self) {
 
         function getBookPrice(bookInfo) {
             var doubanID = bookInfo.id || null;
-            var doubanLink = "http://book.douban.com/subject/" + doubanID + "/buylinks";
+            var doubanLink = "https://book.douban.com/subject/" + doubanID + "/buylinks";
             var priceList = [];
             GM_xmlhttpRequest({
                 method: "get",
@@ -512,7 +536,7 @@ if (window.top === window.self) {
         }
 
         function run() {
-            sitesContainer.addSites([Amazon, TMall, JD, Dangdang, Chinapub, Suning, SuningThird, DuoKan, WinXuan, ituring, epubit]);
+            sitesContainer.addSites([Amazon, TMall, Taobao, JD, Dangdang, Chinapub, Suning, SuningThird, DuoKan, WinXuan, ituring, epubit]);
             sitesContainer.curSite = location.href;
             if (!sitesContainer.curSite) {
                 log("-Error: 不支持当前的页面");
