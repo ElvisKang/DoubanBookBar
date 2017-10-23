@@ -18,7 +18,7 @@
 // @include     *://www.epubit.com.cn/*
 // @include     *://detail.tmall.com/*
 // @include     *://item.taobao.com/*
-// @version     ver 1.2.18
+// @version     ver 1.2.19
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
