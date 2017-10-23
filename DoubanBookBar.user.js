@@ -18,7 +18,7 @@
 // @include     *://www.epubit.com.cn/*
 // @include     *://detail.tmall.com/*
 // @include     *://item.taobao.com/*
-// @version     ver 1.2.19
+// @version     ver 1.2.20
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -105,7 +105,7 @@ if (window.top === window.self) {
 
             getISBN: function () {
                 var contents = document.querySelectorAll("div.content b");
-                for (var i = 0; i <= contents.length; i++) {
+                for (var i = 0; i < contents.length; i++) {
                     var info = contents[i];
                     if (info && info.textContent === "ISBN:") {
                         return info.nextSibling.data.split(",")[0].substring(1);
@@ -125,7 +125,7 @@ if (window.top === window.self) {
 
             getISBN: function () {
                 var items = document.querySelectorAll("#J_AttrUL li");
-                for (var i = 0; i <= items.length; i++) {
+                for (var i = 0; i < items.length; i++) {
                     var info = items[i];
                     if (info.innerText) {
                         var result = info.innerText.match(/ISBN[^0-9]*(\d+)/i)
@@ -148,7 +148,7 @@ if (window.top === window.self) {
 
             getISBN: function () {
                 var items = document.querySelectorAll(".attributes-list li");
-                for (var i = 0; i <= items.length; i++) {
+                for (var i = 0; i < items.length; i++) {
                     var info = items[i];
                     if (info.innerText) {
                         var result = info.innerText.match(/ISBN[^0-9]*(\d+)/i)
