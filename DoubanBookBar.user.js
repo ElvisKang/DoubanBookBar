@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Douban Book Bar
 // @namespace   DoubanBookBar
-// @license		MIT License
+// @license		MIT
 // @author      ElvisKang<elviskang@foxmail.com>
 // @description 以最优惠的价格买到最心仪的书
 // @downloadURL https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.user.js
