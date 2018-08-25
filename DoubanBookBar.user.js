@@ -15,10 +15,10 @@
 // @include     *://www.duokan.com/book/*
 // @include     *://www.winxuan.com/product/*
 // @include     *://www.ituring.com.cn/*
-// @include     *://www.epubit.com.cn/*
+// @include     *://www.epubit.com/*
 // @include     *://detail.tmall.com/*
 // @include     *://item.taobao.com/*
-// @version     ver 1.2.20
+// @version     ver 1.2.21
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -305,21 +305,23 @@ if (window.top === window.self) {
         var epubit = new SupportSite({
             name: "异步社区",
 
-            checker: /(http?:\/\/)?(www)?\.epubit\.com\.cn\/book\/details\/.*/,
+            checker: /(https?:\/\/)?(www)?\.epubit\.com\/book\/detail\/.*/,
 
-            logo: "https://www.epubit.com.cn/favicon.ico",
+            logo: "https://www.epubit.com/static/epubit/img/favicon.ico",
 
             getISBN: function () {
-                var ybContent = document.querySelectorAll("#publish-info ul li");
+                var metas = document.getElementsByTagName('meta');
                 var ybPatt = /(\d+-){3,4}(?:\d+|X)/;
-                for (var i = 0; i < ybContent.length; i++) {
-                    if (ybPatt.test(ybContent[i].textContent)) {
-                        return ybContent[i].innerHTML.match(ybPatt)[0].replace(new RegExp(/(-)/g), '');
+                for (var i = 0; i < metas.length; i++) {
+                    if(metas[i].getAttribute("http-equiv")==="keywords"){
+                        if(ybPatt.test(metas[i].getAttribute("content"))){
+                            return metas[i].getAttribute("content").match(ybPatt)[0].replace(new RegExp(/(-)/g), '');
+                        }
                     }
                 }
                 return null;
             },
-            insertPosition: "div.share"
+            insertPosition: "p.col-gray-12.book_btns"
         });
 
         //全局函数声明区
