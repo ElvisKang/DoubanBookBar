@@ -6,6 +6,12 @@
 - 显示其他电商中商品的价格
 
 ## 更新日志:
+V1.2.22:
+>-Fix 由于豆瓣图书 API 关闭，转用 [zce/douban-api-docs](https://github.com/zce/douban-api-docs) 提供的镜像服务
+
+V1.2.21:
+>-Fix 支持新版异步社区
+
 V1.2.19:
 >-Add 支持淘宝商城
 

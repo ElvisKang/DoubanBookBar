@@ -18,7 +18,7 @@
 // @include     *://www.epubit.com/*
 // @include     *://detail.tmall.com/*
 // @include     *://item.taobao.com/*
-// @version     ver 1.2.21
+// @version     ver 1.2.22
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -486,7 +486,7 @@ if (window.top === window.self) {
             }
             GM_xmlhttpRequest({
                 method: "get",
-                url: "https://api.douban.com/v2/book/isbn/" + isbn,
+                url: "https://douban.uieee.com/v2/book/isbn/" + isbn,
                 onload: function (result) {
                     var bookInfo = JSON.parse(result.responseText);
                     getBookPrice(bookInfo);
