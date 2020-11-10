@@ -3,9 +3,13 @@
 ## 功能:
 
 - 显示书籍的豆瓣评分,以及相应豆瓣链接
-- 显示其他电商中商品的价格
+- ~~显示其他电商中商品的价格~~
 
 ## 更新日志:
+V1.2.23:
+>-Fix 由于豆瓣图书 API 关闭，转用 [qiaohaoforever/DoubanBook](https://github.com/qiaohaoforever/DoubanBook) 提供的镜像服务
+>-删除价格查询
+
 V1.2.22:
 >-Fix 由于豆瓣图书 API 关闭，转用 [zce/douban-api-docs](https://github.com/zce/douban-api-docs) 提供的镜像服务
 

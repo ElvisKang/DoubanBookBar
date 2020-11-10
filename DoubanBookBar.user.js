@@ -4,8 +4,6 @@
 // @license		MIT
 // @author      ElvisKang<elviskang@foxmail.com>
 // @description 以最优惠的价格买到最心仪的书
-// @downloadURL https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.user.js
-// @updateURL   https://greasyfork.org/scripts/3737-douban-book-bar/code/Douban%20Book%20Bar.meta.js
 // @include     *://www.amazon.cn/*
 // @include     *://item.jd.com/*
 // @include     *://product.dangdang.com/*
@@ -18,7 +16,7 @@
 // @include     *://www.epubit.com/*
 // @include     *://detail.tmall.com/*
 // @include     *://item.taobao.com/*
-// @version     ver 1.2.22
+// @version     ver 1.2.23
 // @grant       GM_xmlhttpRequest
 // @grant       GM_addStyle
 // ==/UserScript==
@@ -84,14 +82,12 @@ if (window.top === window.self) {
                 log("-Error: 网页发生变动，插入位置没有找到");
                 return;
             }
-            var infoRowContainer = createInfoRowContainer(),
-                priceRowContainer = createPriceRowContainer();
-            var scoreSpan = createScoreSpan(bookInfo),
-                contrastPriceInfo = createContrastPriceInfo(priceList);
-            priceRowContainer.appendChild(contrastPriceInfo);
+            log(bookInfo.isbn);
+            var infoRowContainer = createInfoRowContainer();
+            var scoreSpan = createScoreSpan(bookInfo);
             infoRowContainer.appendChild(scoreSpan);
             setBaseCss();
-            var bar = createBar(infoRowContainer, priceRowContainer);
+            var bar = createBar(infoRowContainer);
             insertBar(bar, insertPosition);
         };
 
@@ -362,10 +358,10 @@ if (window.top === window.self) {
 
         //得分与评价信息
         function createScoreSpan(bookInfo) {
-            var bookID = bookInfo.id,
+            var bookID = bookInfo.isbn,
                 bookRating = bookInfo.rating || {},
-                numRaters = bookRating.numRaters,
-                averageScore = bookRating.average;
+                numRaters = bookRating.count,
+                averageScore = bookRating.value;
             var scoreSpan = document.createElement("span"),
                 infoUl = document.createElement("ul"),
                 commentsLink = document.createElement("li"),
@@ -388,7 +384,7 @@ if (window.top === window.self) {
                 avgLi.id = "avgScore";
                 starLi.appendChild(starSpan);
                 infoUl.appendChild(avgLi);
-                bookInfoLink.innerHTML = '<a href="https://book.douban.com/subject/' + bookID + '/" target="_blank" >(去豆瓣看这本书)</a>';
+                bookInfoLink.innerHTML = '<a href="' + bookInfo.url + '" target="_blank" >(去豆瓣看这本书)</a>';
                 infoUl.appendChild(starLi);
                 infoUl.appendChild(commentsLink);
             } else {
@@ -440,11 +436,10 @@ if (window.top === window.self) {
             return contrastPriceInfo;
         }
 
-        function createBar(infoRow, priceRow) {
+        function createBar(infoRow) {
             var bar = document.createElement("div");
             bar.id = "bookbar-container";
             bar.appendChild(infoRow);
-            bar.appendChild(priceRow);
             return bar;
 
         }
@@ -486,7 +481,7 @@ if (window.top === window.self) {
             }
             GM_xmlhttpRequest({
                 method: "get",
-                url: "https://douban.uieee.com/v2/book/isbn/" + isbn,
+                url: "https://book.feelyou.top/isbn/" + isbn,
                 onload: function (result) {
                     var bookInfo = JSON.parse(result.responseText);
                     getBookPrice(bookInfo);
@@ -498,43 +493,8 @@ if (window.top === window.self) {
         }
 
         function getBookPrice(bookInfo) {
-            var doubanID = bookInfo.id || null;
-            var doubanLink = "https://book.douban.com/subject/" + doubanID + "/buylinks";
             var priceList = [];
-            GM_xmlhttpRequest({
-                method: "get",
-                url: doubanLink,
-                onload: function (result) {
-                    var container = document.createElement("div");
-                    container.innerHTML = result.responseText;
-                    var list = document.evaluate('//table[@id="buylink-table"]/tbody/tr', container, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);
-                    var priceChecker = /[0-9]+(\.[0-9]+)?/;
-                    var curSitePrice = -1;
-                    for (var i = 1, len = list.snapshotLength; i < len; i++) {
-                        var part = list.snapshotItem(i);
-                        var link_info = part.querySelectorAll("td.pl2");
-                        var siteName = link_info[0].textContent.trim();
-                        if (sitesContainer.nameList.indexOf(siteName) !== -1) {
-                            if (siteName === sitesContainer.curSite.name) {
-                                curSitePrice = priceChecker.exec(link_info[1].textContent.trim())[0];
-                            } else {
-                                var priceInfo = {
-                                    "name": siteName,
-                                    "href": link_info[0].getElementsByTagName("a")[0].href,
-                                    "price": priceChecker.exec(link_info[1].textContent.trim())[0]
-                                };
-                                priceList.push(priceInfo);
-                            }
-                            priceList.curSitePrice = curSitePrice; // 如果为-1，则说明没有获得当前网页的书本价格
-                        }
-                    }
-                    sitesContainer.curSite.createDoubanBar(bookInfo, priceList);
-                },
-                onerror: function (result) {
-                    log("-Error:获取书籍价格失败");
-                }
-            });
-
+            sitesContainer.curSite.createDoubanBar(bookInfo, priceList);
         }
 
         function run() {
@@ -549,7 +509,7 @@ if (window.top === window.self) {
                 log("-Error: 无法获取ISBN");
                 return;
             } else {
-                log("-Success: 成功获取ISBN");
+                log("-Success: 成功获取ISBN: " + isbn);
 
                 //异步调用的Ajax ,所以之后需要调用的函数都封装到ajax当中
                 getBookInfo(isbn);
